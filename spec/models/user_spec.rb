@@ -18,6 +18,8 @@ describe User do
 
   it { should be_valid }
 
+  # Begin user validation tests for name and email
+
   describe "when name is not present" do
     before { @user.name = " " }
     it { should_not be_valid }
@@ -32,6 +34,8 @@ describe User do
     before { @user.name = "a" * 51 }
     it { should_not be_valid }
   end
+
+  # Begin email validation tests
 
   describe "when email format is invalid" do
     it "should be invalid" do
@@ -66,6 +70,8 @@ describe User do
     it { should_not be_valid }
   end
 
+  # Begin password tests
+
   describe "when password is not present" do
     before do
       @user = User.new(name: "Example User, email", 
@@ -79,5 +85,26 @@ describe User do
   describe "when password does not match confirmation" do
     before { @user.password_confirmation = "mismatched" }
     it { should_not be_valid }
+  end
+
+  describe "return value of authenicate method" do
+    before { @user.save }
+    let(:found_user) { User.find_by(email: @user.email) }
+
+    describe "with valid password" do
+      it { should eq found_user.authenticate(@user.password) }
+    end
+
+    describe "with invalid password" do
+      let(:user_for_invalid_password) { found_user.authenticate("invalid") }
+
+      it { should_not eq user_for_invalid_password }
+      specify { expect(user_for_invalid_password).to be_false }
+    end
+  end
+
+  describe "with a password that is too short" do
+    before { @user.password = "short" }
+    it { should be_invalid }
   end
 end
