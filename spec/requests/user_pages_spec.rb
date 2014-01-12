@@ -12,16 +12,16 @@ describe "UserPages" do
     it { should have_title(user.name) }
   end
 
-  describe "signup page" do
+  describe "signup" do
     before { visit signup_path }
-    let(:sumbit) { "Create my account" }
+    let(:submit) { "Create my account" }
 
     it { should have_content('Sign up') }
     it { should have_title('Sign Up') }
 
     describe "with invalid information" do
       it "should not create a user" do
-        expect { click_button submit }.not_to change count(User, :count)
+        expect { click_button submit }.not_to change(User, :count)
       end
     end
 
@@ -34,7 +34,7 @@ describe "UserPages" do
       end
 
       it "should create a user" do
-        expect { click_button submit }.to change count(User, :count)
+        expect { click_button submit }.to change(User, :count).by(1)
       end
     end
   end
