@@ -8,7 +8,7 @@ describe User do
                      password_confirmation: "foobar")
   end
 
-  subject { @user}
+  subject { @user }
 
   it { should respond_to(:name) }
   it { should respond_to(:email) }
@@ -108,5 +108,10 @@ describe User do
   describe "with a password that is too short" do
     before { @user.password = "short" }
     it { should be_invalid }
+  end
+
+  describe "remember token" do
+    before { @user.save }
+    its(:remember_token) { should_not be_blank }
   end
 end
